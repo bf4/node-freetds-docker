@@ -1,4 +1,6 @@
-# FreeTDS and ODBC Configuration
+# Connect to MS SQL Server with node through Docker
+
+...and help you get away from Microsoft technology.
 
 ### Date of this README: March 8, 2016
 
@@ -9,12 +11,24 @@ But sometimes you have to work with the infrastructure that you already have, fo
 By deploying this project and building the `Dockerfile_node` image included in it, you will be able to 
 connect to your **MS SQL Server** database and query as you like.
 
+## To run the proof of concept
+
+* Make sure the Docker binary is installed on your instance, and that you can connect to your MS SQL Server host
+* Note you connection information. In particular, here are the aliases I'll be using:
+    * THE-DB-HOST: defined in various places, representing that actual connection url to the MS SQL Server DB
+    * THE-DB-USER: the database user that will be granted access to the DB
+    * THE-PASSWORD or THE-DB-PASSWORD-WHICH-I-WONT-WRITE-HERE: the database user's password
+    * db: the database to connect to initially (Like calling `USE db;` as the first step)
+* Build node Docker image with the command: `sudo docker build -f Dockerfile_node -t tzaffi/nodefreetds`
+* Run the docker container with the command: `sudo docker run --name nodefreetds -it --rm tzaffi/nodefreetds`
+* Inside the docker run the command: `node testSqlServer.js`
+
+## To get the Docker to be able to permanently connect via stand-alone FreeTDS without node:
+
 ### NOTE:
 
 The various FreeTDS configurations were hard to get right. Finally [FlipperPA](http://stackoverflow.com/questions/33341510/how-to-install-freetds-in-linux)
 and his [Git Repo](https://github.com/FlipperPA/django-python3-vagrant/tree/master/examples) did the trick.
-
-## To get the Project working
 
 Follow the directions below for how to build and run the docker images. As this just a POC you'll need to decide
 how to best use the Docker. Probably the simplest is to use the included `testSqlServer.js` script as a starting point
@@ -25,7 +39,7 @@ Note, that I've only included the most basic Node functionality. The current pop
 * [connect-mssql](https://github.com/patriksimek/connect-mssql) - Connect/Express session store
 * [co-mssql](https://github.com/patriksimek/co-mssql) - Generator friendly wrapper of `node-mssql`
 
-### CLEARLY YOU CAN'T EXPECT THE DOCKER CONTAINERS TO RUN OUT OF THE BOX
+### CLEARLY YOU CAN'T EXPECT THE PURE TDS DOCKER CONTAINER TO RUN OUT OF THE BOX
 That is because you have to provide your particular connection information. Search and replace the following
 terms throughout this project before attempting any build:
 * THE-DB-HOST-ALIAS: should be a name you define in `freetds.conf` that will be referred to by `tsql` and by `odbc.ini`
@@ -34,6 +48,8 @@ terms throughout this project before attempting any build:
 * THE-DB-USER: the database user that will be granted access to the DB
 * THE-PASSWORD or THE-DB-PASSWORD-WHICH-I-WONT-WRITE-HERE: the database user's password
 * db: the database to connect to initially (Like calling `USE db;` as the first step)
+
+# FreeTDS and ODBC Configuration
 
 ## Installation command on Ubuntu:
 ```
@@ -77,22 +93,25 @@ Rather than a nasty error message you sould see the awe inspiring `Connected!` b
 
 ```
 > cd /tzaffimmsql
-> node testSqlServer.js
+> node testSqlServer.js -h THE-DB-HOST -u THE-DB-USER -p THE-PASWORD -d THE-DB
+
 
 connectString is:
 mssql://THE-DB-USER:THE-PASSWORD@THE-DB-HOST/THE-DB
 sql is:
-[object Object]
-[ { ClientID: 12,
-    UNI: 'JohnSmith',
-    PIDM: 1138,
-    FormalTitle: 'Prof.',
-    FirstName: 'John',
-    MiddleName: 'J',
-    Lastname: 'Smith',
-    Email: 'jsmith@mail.com',
-    Phone: null,
-    Staff: true,
+SELECT * FROM master.dbo.sysdatabases;
+[ { name: 'master',
+    dbid: 1,
+    sid: Buffer { '0': 1 },
+    mode: 0,
+    status: 65544,
+    status2: 1090520064,
+    crdate: Tue Apr 08 2003 09:13:36 GMT+0000 (UTC),
+    reserved: Mon Jan 01 1900 00:00:00 GMT+0000 (UTC),
+    category: 0,
+    cmptlevel: 110,
+    filename: 'D:\\RDSDBDATA\\DATA\\master.mdf',
+    version: 706 },
 
 ...
 ```

@@ -14,10 +14,14 @@ var cli = commandLineArgs([
 ]);
 
 var options = cli.parse();
-host = cli.host;
-user = cli.user;
-pwd = cli.pwd;
-db = cli.database;
+
+// Unocomment when you need to debug
+//console.log("options:\n" + JSON.stringify(options));
+
+host = options.host;
+user = options.user;
+pwd = options.pwd;
+db = options.database;
 
 var connectString = "mssql://"+ user  +":"+ pwd + "@"+ host +"/"+ db;
 
