@@ -13,15 +13,18 @@ connect to your **MS SQL Server** database and query as you like.
 
 ## To run the proof of concept
 
+* ***NOTE*** that you *don't really need Docker* to run this project. NPM does a nice job of installing
+everything you need, so you don't have to install Docker if you have a new version of Node installed. In
+the case you want to run outside the docker just `cd` into the `tzaffimssql` directory and run `npm install`.
 * Make sure the Docker binary is installed on your instance, and that you can connect to your MS SQL Server host
 * Note you connection information. In particular, here are the aliases I'll be using:
     * THE-DB-HOST: defined in various places, representing that actual connection url to the MS SQL Server DB
     * THE-DB-USER: the database user that will be granted access to the DB
     * THE-PASSWORD or THE-DB-PASSWORD-WHICH-I-WONT-WRITE-HERE: the database user's password
-    * db: the database to connect to initially (Like calling `USE db;` as the first step)
+    * THE-DB: the database to connect to initially (Like calling `USE db;` as the first step)
 * Build node Docker image with the command: `sudo docker build -f Dockerfile_node -t tzaffi/nodefreetds`
 * Run the docker container with the command: `sudo docker run --name nodefreetds -it --rm tzaffi/nodefreetds`
-* Inside the docker run the command: `node testSqlServer.js`
+* Inside the docker (or just inside the `tzaffimssql` directory if you chose do to this docker-less) run the command: `node testSqlServer.js -h THE-DB-HOST -u THE-DB-USER -p THE-PASSWORD -d THE-DB`
 
 ## To get the Docker to be able to permanently connect via stand-alone FreeTDS without node:
 
