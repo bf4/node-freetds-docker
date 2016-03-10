@@ -1,0 +1,15 @@
+{
+  "name": "nodefreetds",
+  "version": "1.0.0",
+  "description": "Connect to Ms SQL on Unix via Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "command-line-args": "^2.1.6",
+    "mssql": "^3.1.2"
+  }
+}
